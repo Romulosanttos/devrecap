@@ -1,75 +1,87 @@
 # devrecap
 
-> Automated brag document generator — collect GitHub PRs, commits, and Jira issues to produce quarterly career performance documents.
+> Gerador automatizado de brag documents — coleta PRs, commits e issues do Jira para produzir documentos de performance trimestral.
 
-Track and communicate the real impact of your work. Built for software engineers who want to keep a visible record of their deliveries without spending hours writing retrospectives.
+Registre e comunique o impacto real do seu trabalho. Feito para engenheiros de software que querem manter um histórico visível das suas entregas sem gastar horas escrevendo retrospectivas.
 
-## What it generates
+[Read in English](./README.en.md)
 
-For each quarter or sprint, two documents are produced:
+---
 
-| File | Purpose |
-|------|---------|
-| `docs/{year}/Q{n}-{year}.md` | Full brag document — PRs, metrics, epics, technical highlights |
-| `docs/{year}/Q{n}-{year}-checkin.md` | Concise 4-section summary for 1:1s and performance reviews |
+## O que é gerado
 
-## Requirements
+Para cada trimestre ou sprint, dois documentos são produzidos:
+
+| Arquivo | Finalidade |
+|---------|-----------|
+| `docs/{ano}/Q{n}-{ano}.md` | Brag document completo — PRs, métricas, épicos, destaques técnicos |
+| `docs/{ano}/Q{n}-{ano}-checkin.md` | Resumo conciso de 4 seções para 1:1s e avaliações de performance |
+
+---
+
+## Requisitos
 
 - Node.js 24+
-- [GitHub CLI](https://cli.github.com/) (`gh`) — authenticated with your account
-- An Atlassian Cloud account (Jira) — optional, for cross-referencing issues
+- [GitHub CLI](https://cli.github.com/) (`gh`) — autenticado com sua conta
+- Conta no Atlassian Cloud (Jira) — opcional, para cruzar issues com PRs
 
-## Quickstart
+---
+
+## Início rápido
 
 ```bash
-# 1. Clone and install
-git clone https://github.com/your-username/devrecap.git
+# 1. Clone e instale
+git clone https://github.com/Romulosanttos/devrecap.git
 cd devrecap
 npm install
 
 # 2. Configure
 cp .env.example .env
-# Edit .env with your GitHub username and org
+# Edite o .env com seu usuário e org do GitHub
 
-# 3. Collect GitHub data
+# 3. Colete os dados do GitHub
 npm run collect -- Q2-2026
 
-# 4. Query Jira (via Claude Code or GitHub Copilot — see below)
-# Then ask your AI assistant to generate the documents
+# 4. Consulte o Jira via Claude Code ou GitHub Copilot (veja abaixo)
+# Depois peça ao assistente para gerar os documentos
 ```
 
-## Configuration
+---
 
-Copy `.env.example` to `.env` and fill in your values:
+## Configuração
+
+Copie `.env.example` para `.env` e preencha:
 
 ```bash
-GH_USER=your-github-username
-GH_ORG=your-github-org        # use your username for personal repos
-JIRA_PROJECT=YOUR_PROJECT_KEY
-JIRA_ACCOUNT_ID=your-jira-account-id
-JIRA_SITE_URL=https://your-org.atlassian.net
+GH_USER=seu-usuario-github
+GH_ORG=sua-org-github        # use seu usuário para repos pessoais
+JIRA_PROJECT=CHAVE_DO_PROJETO
+JIRA_ACCOUNT_ID=seu-account-id-jira
+JIRA_SITE_URL=https://sua-org.atlassian.net
 ```
 
-> `.env` is gitignored. Do not commit it.
+> `.env` está no `.gitignore`. Nunca faça commit desse arquivo.
 
-## Atlassian MCP Setup
+---
 
-Connect your AI assistant to Jira using the [Atlassian Rovo MCP Server](https://support.atlassian.com/atlassian-rovo-mcp-server/).
-Authentication uses OAuth 2.1 — a browser window opens on first use.
+## Configuração do MCP do Atlassian
+
+Conecte seu assistente de IA ao Jira usando o [Atlassian Rovo MCP Server](https://support.atlassian.com/atlassian-rovo-mcp-server/).
+A autenticação usa OAuth 2.1 — uma janela do browser abre no primeiro uso.
 
 ### GitHub Copilot (VS Code)
 
-`.mcp.json` is already included in this repo. VS Code detects it automatically.
+O arquivo `.mcp.json` já está incluído no repositório. O VS Code detecta automaticamente.
 
-To add manually via Command Palette:
+Para adicionar manualmente via Command Palette:
 1. `MCP: Add Server`
-2. Select **HTTP**
+2. Selecione **HTTP**
 3. URL: `https://mcp.atlassian.com/v1/mcp`
-4. Name: `atlassian`
+4. Nome: `atlassian`
 
 ### Claude Code
 
-Add to your `~/.claude.json` (global config):
+Adicione ao `~/.claude.json` (config global):
 
 ```json
 {
@@ -82,14 +94,14 @@ Add to your `~/.claude.json` (global config):
 }
 ```
 
-Or via CLI:
+Ou via CLI:
 
 ```bash
 claude mcp add --transport http atlassian https://mcp.atlassian.com/v1/mcp
-claude mcp list   # should show: atlassian — Connected
+claude mcp list   # deve mostrar: atlassian — Connected
 ```
 
-**Fallback** for older Claude Code versions:
+**Fallback** para versões antigas do Claude Code:
 
 ```json
 {
@@ -102,205 +114,213 @@ claude mcp list   # should show: atlassian — Connected
 }
 ```
 
-## Full workflow
+---
 
-### Step 1 — Collect GitHub data
+## Fluxo completo
+
+### Passo 1 — Coletar dados do GitHub
 
 ```bash
 npm run collect -- Q2-2026
-# or for a custom date range:
+# ou para um intervalo customizado:
 npm run collect -- sprint-42 --start 2026-01-13 --end 2026-01-24
 ```
 
-Saves raw data to `data/github/Q2-2026.json`.
+Salva os dados brutos em `data/github/Q2-2026.json`.
 
-### Step 2 — Collect Jira data (via AI assistant)
+### Passo 2 — Coletar dados do Jira (via assistente de IA)
 
-Using Claude Code or GitHub Copilot with the Atlassian MCP configured, run a
-query like:
+Com Claude Code ou GitHub Copilot com o MCP do Atlassian configurado, faça uma consulta como:
 
-> "Search Jira for all issues assigned to me in project `PROJ` with status Done,
-> updated between 2026-04-01 and 2026-06-30. Save the result to
+> "Busque no Jira todas as issues atribuídas a mim no projeto `PROJ` com status Done,
+> atualizadas entre 2026-04-01 e 2026-06-30. Salve o resultado em
 > `data/jira/Q2-2026.json`."
 
-### Step 3 — Fill in additional context
+### Passo 3 — Preencher contexto adicional
 
-Edit `prompts/questions.md` with your perspective on the period:
+Edite `prompts/questions.md` com sua perspectiva sobre o período:
 
-- Main deliveries and why they mattered
-- Any blockers or replanned items
-- Learnings and adjustments
-- Specific metrics to highlight
+- Principais entregas e por que importaram
+- Blockers ou replanejamentos
+- Aprendizados e ajustes
+- Métricas específicas a destacar
 
-This file gives the AI context that is not captured in raw GitHub/Jira data.
+Esse arquivo dá ao assistente contexto que não está nos dados brutos do GitHub/Jira.
 
-### Step 4 — Generate documents
+### Passo 4 — Gerar os documentos
 
-In VS Code, open a Copilot Chat and type:
+No VS Code, abra o Copilot Chat e digite:
 
 ```
 /generate-brag Q2-2026
 ```
 
-Or in Claude Code:
+Ou no Claude Code:
 
-> "Run the prompt at `.github/prompts/generate-brag.prompt.md` for period Q2-2026."
+> "Use a skill generate-brag para o período Q2-2026."
 
-The assistant will read `data/github/Q2-2026.json`, `data/jira/Q2-2026.json`, and
-`prompts/questions.md`, then write both documents to `docs/2026/`.
+O assistente vai ler `data/github/Q2-2026.json`, `data/jira/Q2-2026.json` e
+`prompts/questions.md`, e escrever os dois documentos em `docs/2026/`.
 
-See the [Output formats](#output-formats) section below for the expected templates.
+---
 
-## Project structure
+## Estrutura do projeto
 
 ```
 src/
-  collect-github.ts   # GitHub data collection
-  types.ts            # TypeScript interfaces
-  lib/                # Config, period, and github modules
+  collect-github.ts   # CLI de coleta de dados do GitHub
+  types.ts            # Interfaces TypeScript
+  lib/                # Módulos de config, período e coleta
 
-data/                 # gitignored — raw JSON (structure tracked via .gitkeep)
+data/                 # gitignored — JSON bruto (estrutura rastreada via .gitkeep)
   github/
   jira/
 
-docs/                 # generated brag documents (commit these!)
+docs/                 # brag documents gerados (versione esses!)
   2026/
     Q1-2026.md
     Q1-2026-checkin.md
 
 prompts/
-  questions.md        # fill before generating — your context for the period
+  questions.md        # preencha antes de gerar — seu contexto sobre o período
 
 .github/
   workflows/
-    ci.yml            # GitHub Actions: typecheck + lint + tests on push/PR
+    ci.yml            # GitHub Actions: typecheck + lint + testes no push/PR
   skills/
-    generate-brag/    # /generate-brag slash command for Copilot Chat
+    generate-brag/    # comando /generate-brag no Copilot Chat
       SKILL.md
       assets/
 
-.env.example          # config template
-.mcp.json             # VS Code / GitHub Copilot MCP config
+.env.example          # template de configuração
+.mcp.json             # config MCP para VS Code / GitHub Copilot
 .claude/
-  settings.json       # Claude Code MCP config + project context
+  settings.json       # config MCP para Claude Code + arquivos de contexto
   skills/
     generate-brag -> ../../.github/skills/generate-brag  # symlink
 .vscode/
-  settings.json       # VS Code settings — copilot instructions
+  settings.json       # configurações do VS Code — instruções para o Copilot
 ```
 
-## Commands
+---
 
-| Command | Description |
-|---------|-------------|
-| `npm run collect -- Q{n}-{year}` | Collect GitHub data for a quarter |
-| `npm run collect -- sprint-N --start DATE --end DATE` | Collect for a custom range |
-| `npm run typecheck` | TypeScript type check |
+## Comandos
 
-## Output formats
+| Comando | Descrição |
+|---------|-----------|
+| `npm run collect -- Q{n}-{ano}` | Coleta dados do GitHub para um trimestre |
+| `npm run collect -- sprint-N --start DATA --end DATA` | Coleta para um intervalo customizado |
+| `npm run typecheck` | Verificação de tipos TypeScript |
+| `npm run lint` | Lint do código fonte |
+| `npm run test` | Executa os testes |
+| `npm run test:ci` | Testes com relatório de cobertura |
 
-### Brag Document — `Q{n}-{year}.md`
+---
+
+## Formatos de saída
+
+### Brag Document — `Q{n}-{ano}.md`
 
 ```markdown
-# Brag Document — Q{n} {year}
-**Period:** {start date} → {end date}
-**Author:** Your Name | Your Company
+# Brag Document — Q{n} {ano}
+**Período:** {início} → {fim}
+**Autor:** Seu Nome | Sua Empresa
 
-## Executive Summary
-3–4 sentences on the quarter's main themes and business impact.
+## Resumo Executivo
+3–4 frases sobre os principais temas do trimestre e seu impacto para o negócio.
 
-## Deliveries by Epic / Initiative
-### {Epic name}
-- What was delivered and its impact
-- Related closed issues
-- Relevant PRs
+## Entregas por Épico / Iniciativa
+### {Nome do épico}
+- O que foi entregue e qual o impacto
+- Issues relacionadas
+- PRs relevantes
 
-## Merged Pull Requests ({total})
-Table or list with: repo, title, date, link
+## Pull Requests Mergeados ({total})
+Tabela com: repositório, título, data, link
 
-## Metrics
-- PRs merged: X (Y repos)
+## Métricas
+- PRs mergeados: X (Y repos)
 - Commits: X
-- Issues closed: X
+- Issues fechadas: X
 - Story points: X
-- Code reviews: X
 
-## Technical Highlights
-Architectural decisions, complex problems solved, quality improvements.
+## Destaques Técnicos
+Decisões arquiteturais, problemas complexos resolvidos, melhorias de qualidade.
 
-## Learning & Growth
-New technologies, mentorship given/received, documentation produced.
+## Aprendizados e Crescimento
+Novas tecnologias, mentoria, documentação produzida.
 ```
 
-### Check-in Summary — `Q{n}-{year}-checkin.md`
+### Check-in Summary — `Q{n}-{ano}-checkin.md`
 
-A concise 4-section format for 1:1s and performance conversations:
+Formato conciso de 4 seções para 1:1s e conversas de performance:
 
 ```markdown
-# Performance Check-in — Q{n} {year}
+# Check-in de Performance — Q{n} {ano}
 
-## What was delivered and why?
-State WHAT was delivered + WHY it matters (impact, connection to team priorities).
-Example: "Completed the full RFI flow, eliminating manual compliance operations."
+## O que foi entregue e por quê?
+Descreva O QUÊ foi entregue + POR QUÊ importa (impacto, conexão com prioridades do time).
 
-## What is in progress, blocked, or was replanned?
-Be explicit about blockers and replanning with context.
-Example: "Delivery X was delayed because tool access was only granted mid-month."
+## O que está em andamento, bloqueado ou foi replanejado?
+Seja explícito sobre blockers e contexto para qualquer replanejamento.
 
-## What did you notice or adjust?
-Learnings, changes in approach, feedback absorbed.
-Example: "Noticed that aligning API contracts before frontend work starts
-accelerates the cycle — started creating type-only PRs early."
+## O que você identificou ou ajustou?
+Aprendizados, mudanças de abordagem, feedbacks absorvidos.
 
-## What do you need to align or request support on?
-Concrete asks: priorities, unblocking, validations.
-Example: "Need to validate the relative priority between X and Y for Q3."
+## O que você precisa alinhar ou pedir apoio?
+Pedidos concretos: prioridades, desbloqueio, validações.
 ```
 
-**Tips for a good check-in:**
-- Be specific — point to concrete examples
-- Connect deliveries to team or business outcomes
-- Name blockers and what is being done about them
-- Make asks clear and actionable
+**Dicas para um bom check-in:**
+- Seja específico — cite exemplos concretos
+- Conecte entregas a resultados do time ou do negócio
+- Nomeie blockers e o que está sendo feito sobre eles
+- Torne os pedidos claros e acionáveis
 
-## Jira JQL templates
+---
 
-Replace placeholders with your values from `.env`:
+## Templates JQL para o Jira
+
+Substitua os placeholders com seus valores do `.env`:
 
 ```
-# Completed issues this quarter
-project = YOUR_PROJECT_KEY
-  AND assignee = "YOUR_JIRA_ACCOUNT_ID"
+# Issues concluídas no trimestre
+project = CHAVE_DO_PROJETO
+  AND assignee = "SEU_ACCOUNT_ID_JIRA"
   AND statusCategory = Done
-  AND updated >= "YYYY-MM-DD"
-  AND updated <= "YYYY-MM-DD"
+  AND updated >= "AAAA-MM-DD"
+  AND updated <= "AAAA-MM-DD"
 ORDER BY updated ASC
 
-# In-progress issues
-project = YOUR_PROJECT_KEY
-  AND assignee = "YOUR_JIRA_ACCOUNT_ID"
+# Issues em andamento
+project = CHAVE_DO_PROJETO
+  AND assignee = "SEU_ACCOUNT_ID_JIRA"
   AND statusCategory != Done
-  AND updated >= "YYYY-MM-DD"
+  AND updated >= "AAAA-MM-DD"
 ORDER BY updated DESC
 ```
 
-> **Tips:**
-> - Use `statusCategory = Done` (not `status = "Done"`) — safer across board configurations
-> - Use `updated` (not `resolved`) to catch all activity in the period
-> - Your Jira Account ID is in your Atlassian profile URL
+> **Dicas:**
+> - Use `statusCategory = Done` (não `status = "Done"`) — mais seguro entre configurações de board
+> - Use `updated` (não `resolved`) para capturar toda a atividade do período
+> - Seu Jira Account ID está na URL do seu perfil no Atlassian
 
-## Sprint workflow
+---
+
+## Fluxo de sprint
 
 ```bash
-# Collect at the end of each sprint
-npm run collect -- sprint-42 --start YYYY-MM-DD --end YYYY-MM-DD
+# Colete ao final de cada sprint
+npm run collect -- sprint-42 --start AAAA-MM-DD --end AAAA-MM-DD
 
-# Commit the raw data
+# Versione os dados brutos
 git add data/github/sprint-42.json data/jira/sprint-42.json
-git commit -m "chore(data): Sprint 42 — X issues, Y PRs merged"
+git commit -m "chore(data): Sprint 42 — X issues, Y PRs mergeados"
 ```
 
-## License
+---
 
-Apache 2.0 — Copyright 2026 [Rômulo Santos](https://github.com/romulosantos).  
-Any use, fork, or distribution must preserve this copyright notice.
+## Licença
+
+Apache 2.0 — Copyright 2026 [Rômulo Santos](https://github.com/Romulosanttos).  
+Qualquer uso, fork ou distribuição deve preservar este aviso de copyright.
