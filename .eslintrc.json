@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "env": {
+    "browser": false,
+    "commonjs": true,
+    "es2021": true
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      },
+      "node": {
+        "paths": ["src"],
+        "extensions": [".js", ".ts"]
+      }
+    }
+  },
+  "extends": ["airbnb-base", "plugin:prettier/recommended", "plugin:sonarjs/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 12
+  },
+  "plugins": ["@typescript-eslint", "sonarjs"],
+  "rules": {
+    "sonarjs/cognitive-complexity": "error",
+    "@typescript-eslint/consistent-type-imports": "error",
+    "sonarjs/no-identical-expressions": "error",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error",
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "no-useless-constructor": 0,
+    "no-empty-function": 0,
+    "no-underscore-dangle": 0,
+    "no-unused-vars": 0,
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/no-useless-constructor": "error",
+    "multiline-ternary": 0,
+    "no-template-curly-in-string": 0,
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ],
+    "import/no-unresolved": "error",
+    "import/export": 0,
+    "import/prefer-default-export": 0,
+    "no-use-before-define": 0,
+    "no-redeclare": 0,
+    "lines-between-class-members": 0,
+    "max-classes-per-file": 0,
+    "class-methods-use-this": 0,
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "ts": "never"
+      }
+    ],
+    "no-console": "off",
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "LabeledStatement",
+        "message": "Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand."
+      },
+      {
+        "selector": "WithStatement",
+        "message": "`with` is disallowed in strict mode because it makes the code impossible to predict."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/**/*.test.ts"],
+      "env": {
+        "vitest-globals/env": true
+      },
+      "plugins": ["vitest-globals"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ],
+  "ignorePatterns": ["dist/", "node_modules/", "coverage/"]
+}
