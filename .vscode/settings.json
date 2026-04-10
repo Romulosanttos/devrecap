@@ -1,0 +1,12 @@
+{
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "file": "README.md"
+    }
+  ],
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Use conventional commits (feat, fix, chore, docs, refactor). Scope examples: data, docs, src."
+    }
+  ]
+}
