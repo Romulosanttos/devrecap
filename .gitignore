@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+
+# Environment variables — copy .env.example and fill in your values
+.env
+
+# Raw collected data (GitHub PRs, Jira issues) — may contain private repo names
+data/**
+!data/github/.gitkeep
+!data/jira/.gitkeep
+
+# Optional: remove the line below if you want to track your generated docs in git
+# docs/

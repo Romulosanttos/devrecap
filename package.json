@@ -1,0 +1,54 @@
+{
+  "name": "devrecap",
+  "version": "1.0.0",
+  "description": "Automated brag document generator: collects GitHub PRs, commits, and Jira issues to produce quarterly performance documents.",
+  "scripts": {
+    "collect": "tsx src/collect-github.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write src",
+    "format:check": "prettier --check src",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ci": "vitest run --coverage",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "brag-document",
+    "career",
+    "github",
+    "jira",
+    "performance-review"
+  ],
+  "license": "Apache-2.0",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "@vitest/coverage-v8": "^4.1.4",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-sonarjs": "^0.23.0",
+    "eslint-plugin-vitest-globals": "^1.6.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "memfs": "^4.57.1",
+    "prettier": "^3.8.1",
+    "tsx": "^4.21.0",
+    "typescript": "~5.5.4",
+    "vitest": "^4.1.4"
+  },
+  "dependencies": {
+    "commander": "^14.0.3"
+  },
+  "lint-staged": {
+    "src/**/*.ts": ["eslint --fix", "prettier --write"]
+  }
+}
